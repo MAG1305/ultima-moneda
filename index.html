@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Última Moneda</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- PANTALLA DE INICIO -->
+  <div id="screen-start" class="screen active">
+    <h1 class="title">ÚLTIMA MONEDA</h1>
+    <p class="subtitle">Tu mano está encadenada.<br>La guillotina espera.</p>
+    <button id="btn-start">JUGAR</button>
+  </div>
+
+  <!-- PANTALLA DE JUEGO -->
+  <div id="screen-game" class="screen">
+
+    <!-- Info superior -->
+    <div id="hud">
+      <div id="round-info">Ronda <span id="round-current">1</span> / <span id="round-total">5</span></div>
+      <div id="money-display">$<span id="money-amount">0</span></div>
+    </div>
+
+    <!-- Barra de dinero -->
+    <div id="money-bar-container">
+      <div id="money-bar"></div>
+      <span id="money-bar-label">$0</span>
+    </div>
+
+    <!-- Moneda -->
+    <div id="coin-area">
+      <div id="coin">
+        <div class="coin-face front">C</div>
+        <div class="coin-face back">X</div>
+      </div>
+      <div id="coin-result"></div>
+    </div>
+
+    <!-- Botones de elección -->
+    <div id="choice-area">
+      <p id="choice-prompt">¿Cara o Cruz?</p>
+      <div id="choice-buttons">
+        <button class="btn-choice" data-choice="cara">CARA</button>
+        <button class="btn-choice" data-choice="cruz">CRUZ</button>
+      </div>
+    </div>
+
+    <!-- Mano con dedos y guillotinas -->
+    <div id="hand-area">
+      <div class="finger-slot" id="finger-0">
+        <div class="guillotine">
+          <div class="blade"></div>
+          <div class="blade-track"></div>
+        </div>
+        <div class="finger">
+          <div class="finger-body">
+            <span class="finger-label">1</span>
+          </div>
+          <div class="chain"></div>
+        </div>
+      </div>
+      <div class="finger-slot" id="finger-1">
+        <div class="guillotine">
+          <div class="blade"></div>
+          <div class="blade-track"></div>
+        </div>
+        <div class="finger">
+          <div class="finger-body">
+            <span class="finger-label">2</span>
+          </div>
+          <div class="chain"></div>
+        </div>
+      </div>
+      <div class="finger-slot" id="finger-2">
+        <div class="guillotine">
+          <div class="blade"></div>
+          <div class="blade-track"></div>
+        </div>
+        <div class="finger">
+          <div class="finger-body">
+            <span class="finger-label">3</span>
+          </div>
+          <div class="chain"></div>
+        </div>
+      </div>
+      <div class="finger-slot" id="finger-3">
+        <div class="guillotine">
+          <div class="blade"></div>
+          <div class="blade-track"></div>
+        </div>
+        <div class="finger">
+          <div class="finger-body">
+            <span class="finger-label">4</span>
+          </div>
+          <div class="chain"></div>
+        </div>
+      </div>
+      <div class="finger-slot" id="finger-4">
+        <div class="guillotine">
+          <div class="blade"></div>
+          <div class="blade-track"></div>
+        </div>
+        <div class="finger">
+          <div class="finger-body">
+            <span class="finger-label">5</span>
+          </div>
+          <div class="chain"></div>
+        </div>
+      </div>
+      <div id="palm"></div>
+    </div>
+
+  </div>
+
+  <!-- OVERLAY QTE -->
+  <div id="qte-overlay" class="hidden">
+    <div id="qte-box">
+      <p id="qte-text">¡PULSA <strong>ESPACIO</strong>!</p>
+      <div id="qte-bar-container">
+        <div id="qte-bar"></div>
+      </div>
+      <p id="qte-subtext">Retira el dedo antes de que caiga la cuchilla</p>
+    </div>
+  </div>
+
+  <!-- OVERLAY OFERTA CONTINUAR -->
+  <div id="continue-overlay" class="hidden">
+    <div id="continue-box">
+      <h2>¡FIN DE RONDAS!</h2>
+      <p id="continue-money-text">Llevas <strong>$<span id="continue-money">0</span></strong></p>
+      <p>¿Quieres arriesgar 5 rondas más<br>ganando el <strong>DOBLE</strong> por acierto?</p>
+      <div id="continue-buttons">
+        <button id="btn-continue-yes">SÍ, SEGUIR</button>
+        <button id="btn-continue-no">NO, COBRAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA FIN -->
+  <div id="screen-end" class="screen">
+    <h1 id="end-title">JUEGO TERMINADO</h1>
+    <p id="end-summary"></p>
+    <div id="end-fingers"></div>
+    <p id="end-money"></p>
+    <button id="btn-restart">JUGAR DE NUEVO</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
