@@ -1,17 +1,27 @@
+// ===== AUDIO =====
+const heartbeatSound = new Howl({
+  src: ['audio/heartbeat.mp3'],
+  loop: true,
+  volume: 0.8,
+});
+
 // ===== ESTADO DEL JUEGO =====
+const QTE_KEYS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
 const STATE = {
   money: 0,
   round: 0,
   totalRounds: 5,
   moneyPerWin: 100,
-  maxMoney: 500,        // base máximo (5 rondas x $100)
-  extraPhase: false,    // true cuando se están jugando las rondas extra
-  fingers: [false, false, false, false, false], // false = intacto, true = cortado
+  maxMoney: 500,
+  extraPhase: false,
+  fingers: [false, false, false, false, false],
   qteActive: false,
+  qteKey: '',           // tecla aleatoria del QTE actual
   qteTimeout: null,
-  qteAnimFrame: null,
+  qteWaitTimeout: null, // timeout del delay random antes del QTE
   qteStartTime: null,
-  qteDuration: 1500,    // ms para pulsar en el QTE
+  qteDuration: 2000,    // 2 segundos para pulsar
   waitingForNext: false,
 };
 
@@ -35,6 +45,7 @@ const choiceButtons = document.querySelectorAll('.btn-choice');
 
 const qteOverlay    = document.getElementById('qte-overlay');
 const qteBar        = document.getElementById('qte-bar');
+const qteKeyEl      = document.getElementById('qte-key');
 
 const continueOverlay = document.getElementById('continue-overlay');
 const continueMoney   = document.getElementById('continue-money');
@@ -81,7 +92,15 @@ choiceButtons.forEach(btn => {
 
 // ===== FUNCIONES PRINCIPALES =====
 
+function stopAllPendingAudio() {
+  heartbeatSound.stop();
+  clearTimeout(STATE.qteWaitTimeout);
+  clearTimeout(STATE.qteTimeout);
+  STATE.qteActive = false;
+}
+
 function startGame() {
+  stopAllPendingAudio();
   STATE.money = 0;
   STATE.round = 0;
   STATE.totalRounds = 5;
@@ -172,41 +191,46 @@ function handleChoice(playerChoice) {
     } else {
       coinResult.textContent = `${result.toUpperCase()} — ¡Perdiste!`;
       coinResult.style.color = '#ff4444';
-      setTimeout(() => startQTE(), 700);
+      setTimeout(() => {
+        heartbeatSound.play();
+        const delay = Math.random() * 5000; // 0 a 5 segundos
+        STATE.qteWaitTimeout = setTimeout(() => startQTE(), delay);
+      }, 700);
     }
   }, 900);
 }
 
 function startQTE() {
+  heartbeatSound.stop();
+
   const roundIndex = STATE.extraPhase
     ? STATE.round - (STATE.totalRounds - 5)
     : STATE.round;
   const fingerIndex = (roundIndex - 1) % 5;
 
+  STATE.qteKey = QTE_KEYS[Math.floor(Math.random() * QTE_KEYS.length)];
   STATE.qteActive = true;
   STATE.qteStartTime = performance.now();
 
+  qteKeyEl.textContent = STATE.qteKey;
   qteBar.style.transition = 'none';
   qteBar.style.width = '100%';
   qteOverlay.classList.remove('hidden');
 
-  // Animar la barra QTE
   requestAnimationFrame(() => {
     qteBar.style.transition = `width ${STATE.qteDuration}ms linear`;
     qteBar.style.width = '0%';
   });
 
-  // Listener de teclado
   const onKey = (e) => {
     if (!STATE.qteActive) return;
-    if (e.code === 'Space' || e.key === ' ') {
+    if (e.key.toUpperCase() === STATE.qteKey) {
       e.preventDefault();
       resolveQTE(true, fingerIndex, onKey);
     }
   };
   document.addEventListener('keydown', onKey);
 
-  // También permitir click/tap en el overlay para móvil
   const onTap = () => {
     if (!STATE.qteActive) return;
     resolveQTE(true, fingerIndex, onKey, onTap);
@@ -221,6 +245,7 @@ function startQTE() {
 }
 
 function resolveQTE(saved, fingerIndex, onKey, onTap) {
+  heartbeatSound.stop();
   STATE.qteActive = false;
   clearTimeout(STATE.qteTimeout);
   document.removeEventListener('keydown', onKey);
@@ -299,6 +324,7 @@ function showContinueOffer() {
 }
 
 function showEndScreen() {
+  stopAllPendingAudio();
   const cutCount = STATE.fingers.filter(Boolean).length;
   const intactCount = 5 - cutCount;
   const allIntact = cutCount === 0;

@@ -385,53 +385,53 @@ button:active {
 }
 
 #qte-box {
-  background: #1e1e1e;
-  border: 3px solid #cc0000;
-  border-radius: 12px;
-  padding: 32px 48px;
+  background: #111;
+  border: 2px solid #cc0000;
+  border-radius: 8px;
+  padding: 28px 52px 24px;
   text-align: center;
-  box-shadow: 0 0 40px #cc000055;
-  animation: pulseBox 0.5s ease-in-out infinite alternate;
+  animation: pulseBox 0.4s ease-in-out infinite alternate;
 }
 
 @keyframes pulseBox {
-  from { box-shadow: 0 0 20px #cc000055; }
-  to   { box-shadow: 0 0 50px #cc0000aa; }
+  from { box-shadow: 0 0 10px #cc000066, inset 0 0 8px #1a0000; }
+  to   { box-shadow: 0 0 36px #cc0000cc, inset 0 0 18px #2a0000; }
 }
 
 #qte-text {
-  font-size: 2rem;
-  color: #ff4444;
-  margin-bottom: 16px;
-  letter-spacing: 0.05em;
+  font-size: 1.4rem;
+  color: #999;
+  margin-bottom: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-#qte-text strong {
+#qte-key {
+  display: block;
+  font-size: 4rem;
   color: #fff;
-  font-size: 2.4rem;
+  letter-spacing: 0;
+  line-height: 1;
+  margin-top: 4px;
+  text-shadow: 0 0 20px #fff8;
 }
 
 #qte-bar-container {
-  width: 300px;
-  height: 20px;
-  background: #333;
-  border: 2px solid #666;
-  border-radius: 10px;
+  width: 260px;
+  height: 8px;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
   overflow: hidden;
-  margin: 0 auto 12px;
+  margin: 0 auto;
 }
 
 #qte-bar {
   height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, #cc0000, #ff6644);
+  background: #cc2200;
   transition: width linear;
-  border-radius: 8px;
-}
-
-#qte-subtext {
-  font-size: 0.85rem;
-  color: #888;
+  border-radius: 3px;
 }
 
 /* ===== CONTINUE OVERLAY ===== */
