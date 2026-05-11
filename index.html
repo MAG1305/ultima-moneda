@@ -18,20 +18,19 @@
 
   <!-- PANTALLA DE JUEGO -->
   <div id="screen-game" class="screen">
-
-    <!-- Info superior -->
     <div id="hud">
-      <div id="round-info">Ronda <span id="round-current">1</span> / <span id="round-total">5</span></div>
+      <div id="hud-left">
+        <span id="hud-set">Set 1/4</span>
+        <span id="hud-round">Ronda 1/5</span>
+      </div>
       <div id="money-display">$<span id="money-amount">0</span></div>
     </div>
 
-    <!-- Barra de dinero -->
     <div id="money-bar-container">
       <div id="money-bar"></div>
       <span id="money-bar-label">$0</span>
     </div>
 
-    <!-- Moneda -->
     <div id="coin-area">
       <div id="coin">
         <div class="coin-face front">C</div>
@@ -40,7 +39,6 @@
       <div id="coin-result"></div>
     </div>
 
-    <!-- Botones de elección -->
     <div id="choice-area">
       <p id="choice-prompt">¿Cara o Cruz?</p>
       <div id="choice-buttons">
@@ -49,93 +47,97 @@
       </div>
     </div>
 
-    <!-- Mano con dedos y guillotinas -->
     <div id="hand-area">
       <div class="finger-slot" id="finger-0">
-        <div class="guillotine">
-          <div class="blade"></div>
-          <div class="blade-track"></div>
-        </div>
-        <div class="finger">
-          <div class="finger-body">
-            <span class="finger-label">1</span>
-          </div>
-          <div class="chain"></div>
-        </div>
+        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
+        <div class="finger"><div class="finger-body"><span class="finger-label">1</span></div><div class="chain"></div></div>
       </div>
       <div class="finger-slot" id="finger-1">
-        <div class="guillotine">
-          <div class="blade"></div>
-          <div class="blade-track"></div>
-        </div>
-        <div class="finger">
-          <div class="finger-body">
-            <span class="finger-label">2</span>
-          </div>
-          <div class="chain"></div>
-        </div>
+        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
+        <div class="finger"><div class="finger-body"><span class="finger-label">2</span></div><div class="chain"></div></div>
       </div>
       <div class="finger-slot" id="finger-2">
-        <div class="guillotine">
-          <div class="blade"></div>
-          <div class="blade-track"></div>
-        </div>
-        <div class="finger">
-          <div class="finger-body">
-            <span class="finger-label">3</span>
-          </div>
-          <div class="chain"></div>
-        </div>
+        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
+        <div class="finger"><div class="finger-body"><span class="finger-label">3</span></div><div class="chain"></div></div>
       </div>
       <div class="finger-slot" id="finger-3">
-        <div class="guillotine">
-          <div class="blade"></div>
-          <div class="blade-track"></div>
-        </div>
-        <div class="finger">
-          <div class="finger-body">
-            <span class="finger-label">4</span>
-          </div>
-          <div class="chain"></div>
-        </div>
+        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
+        <div class="finger"><div class="finger-body"><span class="finger-label">4</span></div><div class="chain"></div></div>
       </div>
       <div class="finger-slot" id="finger-4">
-        <div class="guillotine">
-          <div class="blade"></div>
-          <div class="blade-track"></div>
-        </div>
-        <div class="finger">
-          <div class="finger-body">
-            <span class="finger-label">5</span>
-          </div>
-          <div class="chain"></div>
-        </div>
+        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
+        <div class="finger"><div class="finger-body"><span class="finger-label">5</span></div><div class="chain"></div></div>
       </div>
       <div id="palm"></div>
     </div>
-
   </div>
 
-  <!-- OVERLAY QTE -->
-  <div id="qte-overlay" class="hidden">
-    <div id="qte-box">
-      <p id="qte-text">PRESIONA <strong id="qte-key">?</strong></p>
-      <div id="qte-bar-container">
-        <div id="qte-bar"></div>
+  <!-- OVERLAY: OFERTA CONTINUAR AL SIGUIENTE SET -->
+  <div id="continue-offer-overlay" class="overlay hidden">
+    <div id="co-box">
+      <p id="co-money">Llevas $0</p>
+      <p class="co-label">¿Continuar?</p>
+      <p id="co-next-set">SET 2</p>
+      <p id="co-next-desc"></p>
+      <div id="co-buttons">
+        <button id="btn-co-yes">SEGUIR</button>
+        <button id="btn-co-no">COBRAR</button>
       </div>
     </div>
   </div>
 
-  <!-- OVERLAY OFERTA CONTINUAR -->
-  <div id="continue-overlay" class="hidden">
-    <div id="continue-box">
-      <h2>¡FIN DE RONDAS!</h2>
-      <p id="continue-money-text">Llevas <strong>$<span id="continue-money">0</span></strong></p>
-      <p>¿Quieres arriesgar 5 rondas más<br>ganando el <strong>DOBLE</strong> por acierto?</p>
-      <div id="continue-buttons">
-        <button id="btn-continue-yes">SÍ, SEGUIR</button>
-        <button id="btn-continue-no">NO, COBRAR</button>
+  <!-- OVERLAY: TRANSICIÓN DE SET -->
+  <div id="set-transition-overlay" class="overlay hidden">
+    <div id="stt-box">
+      <p id="stt-label">SIGUIENTE FASE</p>
+      <h2 id="stt-setnum">SET 1</h2>
+      <p id="stt-desc">Presiona la tecla correcta</p>
+      <p id="stt-money">$1.000 por acierto</p>
+      <button id="btn-set-continue">CONTINUAR</button>
+    </div>
+  </div>
+
+  <!-- OVERLAY MG1: TECLA ÚNICA -->
+  <div id="mg1-overlay" class="overlay hidden">
+    <div class="mg-box">
+      <p class="mg-title">PRESIONA</p>
+      <strong id="mg1-key">?</strong>
+      <div class="mg-bar-container"><div id="mg1-bar" class="mg-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- OVERLAY MG2: SECUENCIA DE TECLAS -->
+  <div id="mg2-overlay" class="overlay hidden">
+    <div class="mg-box">
+      <p class="mg-title">SECUENCIA</p>
+      <div id="mg2-seq-display"></div>
+      <p id="mg2-seq-progress" class="mg-progress">0 / 4</p>
+      <div class="mg-bar-container"><div id="mg2-bar" class="mg-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- OVERLAY MG3: ESQUIVAR LA CUCHILLA -->
+  <div id="mg3-overlay" class="overlay hidden">
+    <div class="mg-box mg3-layout">
+      <p class="mg-title">NO TOQUES LA CUCHILLA</p>
+      <div class="mg-bar-container"><div id="mg3-timer-bar" class="mg-bar mg-bar-green"></div></div>
+      <div id="mg3-arena">
+        <div id="mg3-blade"></div>
+        <div id="mg3-finger"></div>
       </div>
+      <p id="mg3-hint-hold">MANTÉN PULSADO PARA SUBIR</p>
+    </div>
+  </div>
+
+  <!-- OVERLAY MG4: CORTAR CABLE -->
+  <div id="mg4-overlay" class="overlay hidden">
+    <div class="mg-box">
+      <p class="mg-title">CORTA EL CABLE</p>
+      <div id="mg4-word-container">
+        <span id="mg4-word">ROJO</span>
+      </div>
+      <div class="mg-bar-container"><div id="mg4-timer-bar" class="mg-bar"></div></div>
+      <div id="mg4-cables"></div>
     </div>
   </div>
 
@@ -148,6 +150,6 @@
     <button id="btn-restart">JUGAR DE NUEVO</button>
   </div>
 
-  <script src="game.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
