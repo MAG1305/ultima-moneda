@@ -1,5 +1,6 @@
 import { STATE, SETS_CONFIG, resetState, intactFingerIndices } from './state.js';
-import { startHeartbeat, stopHeartbeat } from './audio.js';
+import { startHeartbeat, stopHeartbeat, playLossSequence } from './audio.js';
+import { showDialog } from './dialog.js';
 import * as UI from './ui.js';
 import { start as startMG1 } from './minigames/set1.js';
 import { start as startMG2 } from './minigames/set2.js';
@@ -8,12 +9,35 @@ import { start as startMG4 } from './minigames/set4.js';
 
 const MINIGAMES = [startMG1, startMG2, startMG3, startMG4];
 
+// Texto placeholder para las cajas de diálogo (a refinar más adelante)
+const PRE_MINIGAME_LINES = [
+  'Ya te dije que no te ibas a librar tan fácil.',
+  'Veamos qué tan rápidos son tus reflejos.',
+  'A ver si la suerte sigue contigo.',
+  'No tiembles. Es solo un dedo.',
+];
+const SAVED_LINES = [
+  'Tuviste suerte... esta vez.',
+  'Mmh. Te salvaste por poco.',
+  'No te confíes. Vuelve a la moneda.',
+];
+const CUT_LINES = [
+  '¡Otro dedo para mi colección!',
+  'Te lo advertí.',
+  'Eso es. La casa siempre gana.',
+];
+
+function randomLine(lines) {
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+
 // ===== Entry points =====
 
 export function startGame() {
   resetState();
   UI.resetFingers();
   UI.updateMoney(0);
+  UI.setBossSprite('initial');
   UI.showScreen('game');
   beginSet(0);
 }
@@ -55,6 +79,7 @@ function beginRound() {
   UI.clearCoinResult();
   UI.setActiveRoundFinger(STATE.activeFingerIndex);
   UI.updateHUD(STATE.currentSet + 1, STATE.currentRound, STATE.totalRoundsInSet);
+  UI.setBossSprite('initial');
   UI.enableCoinChoice(true);
 }
 
@@ -76,9 +101,11 @@ export function handleCoinChoice(playerChoice) {
         `¡${result.toUpperCase()}!  +$${moneyPerWin.toLocaleString('es')}`,
         '#66bb6a',
       );
+      UI.setBossSprite('smile');
       scheduleNext(1400);
     } else {
       UI.showCoinResult(`${result.toUpperCase()} — Perdiste`, '#ff4444');
+      UI.setBossSprite('angry');
 
       const fingerAlreadyCut = STATE.fingers[STATE.activeFingerIndex];
       if (fingerAlreadyCut) {
@@ -97,8 +124,16 @@ export function handleCoinChoice(playerChoice) {
 
 // ===== Minigame =====
 
-function triggerMinigame() {
+async function triggerMinigame() {
   stopHeartbeat();
+
+  // Diálogo de prueba antes del minijuego
+  await showDialog({
+    sprite:  'angry',
+    text:    randomLine(PRE_MINIGAME_LINES),
+    buttons: [{ id: 'go', label: 'EMPEZAR' }],
+  });
+
   MINIGAMES[STATE.currentSet]({
     fingerIndex: STATE.activeFingerIndex,
     onSaved: () => onMinigameResult(true),
@@ -106,17 +141,29 @@ function triggerMinigame() {
   });
 }
 
-function onMinigameResult(saved) {
+async function onMinigameResult(saved) {
   stopHeartbeat();
   const fi = STATE.activeFingerIndex;
 
   if (saved) {
     UI.markFingerSaved(fi);
     UI.showCoinResult('DEDO SALVADO', '#66bb6a');
+    UI.setBossSprite('angry');
+
+    await showDialog({
+      sprite:  'angry',
+      text:    randomLine(SAVED_LINES),
+      buttons: [{ id: 'next', label: 'SEGUIR' }],
+    });
   } else {
     STATE.fingers[fi] = true;
+
+    // Efectos: sonido (guillotina + grito) + sacudida + flash rojo
+    playLossSequence();
+    UI.triggerLossFx();
     UI.markFingerCut(fi);
     UI.showCoinResult('DEDO CORTADO', '#cc2200');
+    UI.setBossSprite('toothless');
 
     // Avanzar al siguiente dedo en sets 1-3
     if (STATE.currentSet < 3) {
@@ -124,9 +171,22 @@ function onMinigameResult(saved) {
       while (next < 5 && STATE.fingers[next]) next++; // saltar si ya estaba cortado
       STATE.threatFingerIndex = Math.min(next, 4);
     }
+
+    // Esperamos un poco al impacto antes del diálogo
+    await wait(900);
+
+    await showDialog({
+      sprite:  'toothless',
+      text:    randomLine(CUT_LINES),
+      buttons: [{ id: 'next', label: 'SEGUIR' }],
+    });
   }
 
-  scheduleNext(1200);
+  scheduleNext(400);
+}
+
+function wait(ms) {
+  return new Promise(r => setTimeout(r, ms));
 }
 
 // ===== Next round / set =====

@@ -1,4 +1,5 @@
 import { MAX_MONEY } from './state.js';
+import { BOSS_SPRITES } from './dialog.js';
 
 // ===== DOM refs =====
 const screenStart = document.getElementById('screen-start');
@@ -28,7 +29,11 @@ const coin           = document.getElementById('coin');
 const coinResult     = document.getElementById('coin-result');
 const choiceButtons  = document.querySelectorAll('.btn-choice');
 
-const fingerSlots = [0, 1, 2, 3, 4].map(i => document.getElementById(`finger-${i}`));
+const bossSprite  = document.getElementById('boss-sprite');
+const handImage   = document.getElementById('hand-image');
+const screenFx    = document.getElementById('screen-fx');
+
+const fingerMarkers = [0, 1, 2, 3, 4].map(i => document.getElementById(`finger-${i}`));
 
 const endTitle   = document.getElementById('end-title');
 const endSummary = document.getElementById('end-summary');
@@ -39,6 +44,35 @@ const endMoney   = document.getElementById('end-money');
 export function showScreen(name) {
   [screenStart, screenGame, screenEnd].forEach(s => s.classList.remove('active'));
   ({ start: screenStart, game: screenGame, end: screenEnd })[name]?.classList.add('active');
+}
+
+// ===== Boss sprite (en la escena, no en el diálogo) =====
+export function setBossSprite(key) {
+  const url = BOSS_SPRITES[key] ?? key;
+  if (url) bossSprite.src = url;
+}
+
+// ===== Hand image (sprite sin fondo sobre la mesa) =====
+export function setHandImage(_state) {
+  handImage.src = 'img/mesa-dedos.png';
+}
+
+// ===== Screen FX (al cortar dedo) =====
+export function triggerLossFx() {
+  screenFx.classList.remove('hidden');
+  screenFx.classList.remove('active');
+  void screenFx.offsetWidth;
+  screenFx.classList.add('active');
+  screenGame.classList.add('shake');
+
+  setTimeout(() => {
+    screenGame.classList.remove('shake');
+  }, 700);
+
+  setTimeout(() => {
+    screenFx.classList.remove('active');
+    screenFx.classList.add('hidden');
+  }, 1100);
 }
 
 // ===== Continue Offer (between sets) =====
@@ -117,24 +151,26 @@ export function clearCoinResult() {
   coinResult.textContent = '';
 }
 
-// ===== Fingers =====
+// ===== Fingers (marcadores sobre la imagen) =====
 export function resetFingers() {
-  fingerSlots.forEach(s => s.classList.remove('cut', 'saved', 'active-round'));
+  fingerMarkers.forEach(m => m.classList.remove('cut', 'saved', 'active-round'));
+  setHandImage('intact');
 }
 
 export function setActiveRoundFinger(index) {
-  fingerSlots.forEach(s => s.classList.remove('active-round'));
-  if (index >= 0) fingerSlots[index]?.classList.add('active-round');
+  fingerMarkers.forEach(m => m.classList.remove('active-round'));
+  if (index >= 0) fingerMarkers[index]?.classList.add('active-round');
 }
 
 export function markFingerCut(index) {
-  fingerSlots[index]?.classList.remove('active-round', 'saved');
-  fingerSlots[index]?.classList.add('cut');
+  fingerMarkers[index]?.classList.remove('active-round', 'saved');
+  fingerMarkers[index]?.classList.add('cut');
+  setHandImage('cut');
 }
 
 export function markFingerSaved(index) {
-  fingerSlots[index]?.classList.remove('active-round');
-  fingerSlots[index]?.classList.add('saved');
+  fingerMarkers[index]?.classList.remove('active-round');
+  fingerMarkers[index]?.classList.add('saved');
 }
 
 // ===== End screen =====

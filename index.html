@@ -18,57 +18,65 @@
 
   <!-- PANTALLA DE JUEGO -->
   <div id="screen-game" class="screen">
-    <div id="hud">
-      <div id="hud-left">
-        <span id="hud-set">Set 1/4</span>
-        <span id="hud-round">Ronda 1/5</span>
-      </div>
-      <div id="money-display">$<span id="money-amount">0</span></div>
+
+    <!-- Escena: Fondo → Jefe → Mesa → Manos -->
+    <div id="scene-bg">
+      <img id="bg-wall" class="scene-layer" src="img/fondo.png" alt="" />
+      <img id="boss-sprite" class="scene-layer" src="img/jefe-inicial-removebg-preview.png" alt="" />
+      <img id="table-image" class="scene-layer" src="img/table.png" alt="" />
+      <img id="hand-image" class="scene-layer" src="img/mesa-dedos.png" alt="" />
     </div>
 
-    <div id="money-bar-container">
-      <div id="money-bar"></div>
-      <span id="money-bar-label">$0</span>
+    <div id="game-ui">
+      <div id="hud">
+        <div id="hud-left">
+          <span id="hud-set">Set 1/4</span>
+          <span id="hud-round">Ronda 1/5</span>
+        </div>
+        <div id="money-display">$<span id="money-amount">0</span></div>
+      </div>
+
+      <div id="money-bar-container">
+        <div id="money-bar"></div>
+        <span id="money-bar-label">$0</span>
+      </div>
+
+      <div id="coin-area">
+        <div id="coin">
+          <div class="coin-face front">C</div>
+          <div class="coin-face back">X</div>
+        </div>
+        <div id="coin-result"></div>
+      </div>
+
+      <div id="choice-area">
+        <p id="choice-prompt">¿Cara o Cruz?</p>
+        <div id="choice-buttons">
+          <button class="btn-choice" data-choice="cara">CARA</button>
+          <button class="btn-choice" data-choice="cruz">CRUZ</button>
+        </div>
+      </div>
     </div>
 
-    <div id="coin-area">
-      <div id="coin">
-        <div class="coin-face front">C</div>
-        <div class="coin-face back">X</div>
-      </div>
-      <div id="coin-result"></div>
+    <!-- Marcadores de estado por dedo, superpuestos sobre la imagen -->
+    <div id="finger-markers">
+      <div class="finger-marker" id="finger-0"></div>
+      <div class="finger-marker" id="finger-1"></div>
+      <div class="finger-marker" id="finger-2"></div>
+      <div class="finger-marker" id="finger-3"></div>
+      <div class="finger-marker" id="finger-4"></div>
     </div>
+  </div>
 
-    <div id="choice-area">
-      <p id="choice-prompt">¿Cara o Cruz?</p>
-      <div id="choice-buttons">
-        <button class="btn-choice" data-choice="cara">CARA</button>
-        <button class="btn-choice" data-choice="cruz">CRUZ</button>
+  <!-- OVERLAY: DIÁLOGO DEL JEFE -->
+  <div id="dialog-overlay" class="overlay hidden">
+    <div id="dialog-box">
+      <img id="dialog-portrait" src="img/jefe-inicial-removebg-preview.png" alt="" />
+      <div id="dialog-content">
+        <p id="dialog-speaker">EL JEFE</p>
+        <p id="dialog-text"></p>
+        <div id="dialog-buttons"></div>
       </div>
-    </div>
-
-    <div id="hand-area">
-      <div class="finger-slot" id="finger-0">
-        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
-        <div class="finger"><div class="finger-body"><span class="finger-label">1</span></div><div class="chain"></div></div>
-      </div>
-      <div class="finger-slot" id="finger-1">
-        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
-        <div class="finger"><div class="finger-body"><span class="finger-label">2</span></div><div class="chain"></div></div>
-      </div>
-      <div class="finger-slot" id="finger-2">
-        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
-        <div class="finger"><div class="finger-body"><span class="finger-label">3</span></div><div class="chain"></div></div>
-      </div>
-      <div class="finger-slot" id="finger-3">
-        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
-        <div class="finger"><div class="finger-body"><span class="finger-label">4</span></div><div class="chain"></div></div>
-      </div>
-      <div class="finger-slot" id="finger-4">
-        <div class="guillotine"><div class="blade"></div><div class="blade-track"></div></div>
-        <div class="finger"><div class="finger-body"><span class="finger-label">5</span></div><div class="chain"></div></div>
-      </div>
-      <div id="palm"></div>
     </div>
   </div>
 
@@ -140,6 +148,9 @@
       <div id="mg4-cables"></div>
     </div>
   </div>
+
+  <!-- EFECTOS DE PANTALLA AL PERDER -->
+  <div id="screen-fx" class="hidden"></div>
 
   <!-- PANTALLA FIN -->
   <div id="screen-end" class="screen">
